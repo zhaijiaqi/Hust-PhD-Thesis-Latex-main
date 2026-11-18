@@ -1,0 +1,33 @@
+{
+  "latex-workshop.latex.recipes": [
+    { "name": "论文：XeLaTeX + BibTeX（自动处理引用）", "tools": ["hust-xelatexmk"] },
+    { "name": "文字校对：隐藏图像", "tools": ["hust-preview"] }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "hust-xelatexmk",
+      "command": "/Users/halo/Library/TinyTeX/bin/universal-darwin/latexmk",
+      "args": ["-xelatex", "-synctex=1", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", "-cd", "-outdir=%OUTDIR%", "%DOC%"],
+      "env": {"PATH": "/Users/halo/Library/TinyTeX/bin/universal-darwin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"}
+    },
+    {
+      "name": "hust-preview",
+      "command": "/Users/halo/Library/TinyTeX/bin/universal-darwin/latexmk",
+      "args": ["-xelatex", "-synctex=1", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", "-cd", "-outdir=%OUTDIR%", "%DIR%/preview.tex"],
+      "env": {"PATH": "/Users/halo/Library/TinyTeX/bin/universal-darwin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"}
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "first",
+  "latex-workshop.latex.build.forceRecipeUsage": true,
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.path": "/Users/halo/Library/TinyTeX/bin/universal-darwin/synctex",
+  "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+  "terminal.integrated.env.osx": {
+    "PATH": "/Users/halo/Library/TinyTeX/bin/universal-darwin:${env:PATH}"
+  },
+  "search.exclude": {"**/build/**": true},
+  "files.exclude": {"**/*.aux": true, "**/*.blg": true, "**/*.fdb_latexmk": true, "**/*.fls": true, "**/*.synctex.gz": true},
+  "[latex]": {"editor.wordWrap": "on", "editor.formatOnSave": false}
+}
