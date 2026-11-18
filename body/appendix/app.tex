@@ -1,0 +1,54 @@
+% !TeX root = ../../main.tex
+\chapter{攻读博士学位期间的相关研究成果}
+以下列出与本文直接相关的三项合作研究。会议与状态依提供的论文材料及作者确认记录整理，尚未确定的正式卷页与出版标识不作补写。
+\begin{enumerate}
+\item Jiaqi Zhai, Xuanhua Shi, Kaiyi Huang, Chencheng Ye, Weifang Hu, Bingsheng He, Hai Jin. AccelES: Accelerating Top-K SpMV for Embedding Similarity via Low-bit Pruning. IEEE International Symposium on High-Performance Computer Architecture (HPCA), 2025: 977--990.
+\item Jiaqi Zhai, Xuanhua Shi, Wenju Zhao, Kaiyi Huang, Chencheng Ye, Shunsen Lv, Zhongtian Long, Bingsheng He, Hai Jin. ParetoES: Hardware-Accelerated Sparse Embedding Similarity via Pareto-Optimal Pruning. International Symposium on Computer Architecture (ISCA), 2026.
+\item Jiaqi Zhai, Haozhi Han, Kaiyi Huang, Wenju Zhao, Yifeng Chen, Yunquan Zhang, Ting Cao, Yunxin Liu, Hai Jin, Xuanhua Shi, Kun Li. EvoCG: Self-Evolving Precision Control for Faster Conjugate Gradient. ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP), 2027, 已录用。Jiaqi Zhai与Haozhi Han为共同第一作者。
+\end{enumerate}
+
+\chapter{研究成果与学位论文的关系}
+\begin{table}[htbp]\centering
+\caption{代表性研究成果与本文章节的对应关系}
+\begin{tabularx}{\textwidth}{p{2cm}p{2.2cm}X}\toprule
+研究成果&对应章节&在学位论文中的作用\\\midrule
+AccelES&第3章&低比特分层计算、ReSparse、Ultra-CSR与Random-CSR、FPGA异构执行及实验\\
+ParetoES&第4章&方向敏感聚类、候选簇选择、ACPE、分布式微排序及热点均衡\\
+EvoCG&第5章&闭环精度控制、Tile-CSC、统一GPU内核、低开销运行时与数值验证\\
+三项成果&第1、2、6章&重新组织共同研究问题、计算特征分析、方法关联、适用条件和未来方向\\\bottomrule
+\end{tabularx}
+\end{table}
+
+三项成果均为合作研究。作者在具体算法设计、系统实现、实验分析和论文写作中的个人分工，应结合合作记录由作者和导师确认。本初稿不根据作者顺序推断独立完成比例，也不将合作团队完成的全部工作自动归属于本人。
+
+第3章与第4章共享低比特稀疏数据流基础，本文在第4章明确区分继承技术与新增贡献。第5章研究具有不同数值语义的迭代过程，与前两章的关系是计算需求驱动方法的拓展，不是同一算法或加速器的连续版本。
+
+\chapter{主要符号及中英文缩写}
+\begin{longtable}{p{2.7cm}p{5.3cm}p{5.3cm}}
+\toprule 缩写或符号&英文或数学含义&中文含义\\\midrule\endhead
+SpMV&Sparse Matrix--Vector Multiplication&稀疏矩阵--向量乘法\\
+Top-K&Top-K selection&最高分的K个结果选择\\
+CG&Conjugate Gradient&共轭梯度法\\
+PCG&Preconditioned Conjugate Gradient&预条件共轭梯度法\\
+SPD&Symmetric Positive Definite&对称正定\\
+CSR&Compressed Sparse Row&压缩稀疏行格式\\
+CSC&Compressed Sparse Column&压缩稀疏列格式\\
+COO&Coordinate format&坐标格式\\
+NNZ&Number of nonzeros&非零元素数量\\
+HBM&High Bandwidth Memory&高带宽存储器\\
+FPGA&Field-Programmable Gate Array&现场可编程门阵列\\
+GPU&Graphics Processing Unit&图形处理器\\
+INT6&6-bit signed integer&6位有符号整数\\
+FP32 / FP64&32/64-bit floating point&单精度／双精度浮点\\
+BF16&Brain Floating Point 16&16位浮点格式\\
+ACPE&Adaptive Cluster Probing Engine&自适应簇探测引擎\\
+\hbalance{}&Hierarchical Hotspot-Balancing&分层热点负载均衡\\
+PPO&Proximal Policy Optimization&近端策略优化\\
+QPS&Queries Per Second&每秒查询数\\
+CV&Coefficient of Variation&变异系数\\
+$m,n,z$&Rows, columns, nonzeros&行数、列数、非零元素数\\
+$K,L$&Result size, candidate budget&输出规模、预筛候选预算\\
+$R,C$&Tile height and width&Tile行数与列数\\
+$r_k,p_k$&Residual and search direction&第k轮残差与搜索方向\\
+$K^*$&Action reuse interval&精度动作复用间隔\\\bottomrule
+\end{longtable}

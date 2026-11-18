@@ -1,0 +1,66 @@
+% !TeX program = xelatex
+% 初稿 2026-11-12。来源与待核对事项见 README_初稿.md。
+% 本模板使用 xeCJK 和 TTF 字体，pdfLaTeX 不能编译。
+\ifdefined\XeTeXversion\else
+  \errmessage{HUST thesis requires XeLaTeX. In Overleaf Settings, select XeLaTeX, not pdfLaTeX}
+  \expandafter\endinput
+\fi
+\documentclass[draftformat,mathCMR]{HUSTthesis}
+\ifdefined\ThesisFastPreview
+  \setkeys{Gin}{draft}
+\fi
+\usepackage{setspace}
+\usepackage{bm,mathtools,tabularx,multirow,makecell,longtable}
+\usepackage{algorithm,algorithmic}
+\usepackage{float}
+% TikZ 图已预编译为矢量 PDF；正文编译无需加载 PGF/TikZ。
+\usepackage{placeins}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Arial}{\setsansfont{Arial}}{\setsansfont{TeX Gyre Heros}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\TopK}{TopK}
+\DeclareMathOperator{\nnz}{nnz}
+\DeclareMathOperator{\clip}{clip}
+\DeclareMathOperator{\round}{round}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\hbalance}{\ensuremath{\mathrm{H}^{2}\mathrm{Balance}}}
+% 图、图题与对应正文作为整体分页；图间始终保留说明文字。
+\newcommand{\thesisfig}[5][0.88]{\FloatBarrier\par\addvspace{10pt}\penalty0\noindent
+\begin{minipage}{\linewidth}\centering
+\IfFileExists{figures/#2.tex}{\includegraphics{#2}}{%
+\includegraphics[width=#1\linewidth,height=.64\textheight,keepaspectratio]{#2}}
+\captionof{figure}{#3}\label{#4}
+\parbox{\linewidth}{\setlength{\parindent}{2em}\indent #5\par}
+\end{minipage}\par\addvspace{10pt}}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入：}}
+\renewcommand{\algorithmicensure}{\textbf{输出：}}
+\numberwithin{algorithm}{chapter}
+\setlength{\emergencystretch}{2em}
+\hypersetup{pdftitle={面向稀疏矩阵计算的近似计算与软硬件协同加速技术研究},pdfauthor={翟嘉琪},bookmarksnumbered=true}
+\begin{document}
+\graphicspath{{figures/}}
+\frontmatter
+\input{body/cover}
+\makecover
+\tableofcontents
+\mainmatter
+\raggedbottom
+\input{body/chapter/1.Introduction}
+\input{body/chapter/2.Analysis}
+\input{body/chapter/3.AccelES}
+\input{body/chapter/4.ParetoES}
+\input{body/chapter/5.EvoCG}
+\input{body/chapter/6.Summary}
+\input{body/chapter/ack}
+\bibliographystyle{HUSTThesis}
+\bibliography{ref/thesis}
+\begin{appendix}
+\input{body/appendix/app}
+\input{body/appendix/reproducibility}
+\end{appendix}
+\end{document}

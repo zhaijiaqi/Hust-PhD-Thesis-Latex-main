@@ -1,0 +1,15 @@
+\begin{tikzpicture}[font=\fontsize{10}{12}\selectfont,>=Stealth,
+b/.style={draw,rounded corners=2pt,align=center,minimum height=13mm,text width=34mm,fill=blue!5}]
+\node[b,text width=124mm] (h) {本地 HBM：簇代表、地址映射表与簇内候选数据\\512 位数据接口；Ultra-CSR 每包承载 30 个 INT6 非零元素};
+\node[b,below=9mm of h,xshift=-44mm] (d) {Decoder\\行标志前缀解码\\恢复行边界与列索引};
+\node[b,right=8mm of d] (m) {Multiplier\\30 路 INT6 乘法\\15 份查询向量副本};
+\node[b,right=8mm of m] (a) {Aggregator\\按行归约\\维护跨包部分和};
+\node[b,below=10mm of a] (t) {Top-16 Updater\\四个 Top-4 单元\\轮询更新局部候选};
+\node[b,left=8mm of t] (s) {Bitonic-16\\局部候选排序\\同步传递编号与得分};
+\node[b,left=8mm of s] (map) {Mem Map\\簇编号映射至地址\\读取选中簇数据区间};
+\node[b,text width=124mm,below=10mm of s] (mode) {两阶段复用同一计算流水\\阶段一：簇代表评分与探测选择\quad 阶段二：簇内候选评分与 Top-K 输出};
+\draw[->] (h.south)-|(d.north);\draw[->] (d)--(m);\draw[->] (m)--(a);
+\draw[->] (a)--(t);\draw[->] (t)--(s);\draw[->] (s)--(map);
+\draw[->] (map.west)--++(-5mm,0)|-(d.west);
+\draw[->] (s)--(mode);
+\end{tikzpicture}

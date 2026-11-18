@@ -1,0 +1,12 @@
+\begin{tikzpicture}[font=\fontsize{10}{12}\selectfont,>=Stealth,
+b/.style={draw,rounded corners=2pt,align=center,minimum height=14mm,text width=54mm,fill=blue!5}]
+\node[b] (state) {求解状态 p(k)\\按 64 列划分并归一化\\构造局部状态片段};
+\node[b,right=12mm of state] (policy) {设备端策略推理\\两层轻量 MLP，FP16 权重\\Tensor Core 运算与 FP32 累加};
+\node[b,below=9mm of policy] (reuse) {区间复用\\每隔 K* 轮更新精度动作\\窗口内沿用已有动作};
+\node[b,left=12mm of reuse] (spmv) {EvoSpMV\\共享结构索引的统一内核\\按动作读取 FP64 / FP32 / BF16};
+\node[b,below=9mm of spmv] (cg) {融合 CG 更新\\内积归约、步长计算\\更新解、残差与搜索方向};
+\node[b,right=12mm of cg] (graph) {CUDA Graph\\重放固定执行依赖\\动作变化通过设备端数组传递};
+\draw[->] (state)--(policy);\draw[->] (policy)--(reuse);\draw[->] (reuse)--(spmv);\draw[->] (spmv)--(cg);
+\draw[->] (cg.west)--++(-6mm,0)|-(state.west);
+\draw[dashed,->] (graph)--(cg);\draw[dashed,->] (graph.north)--(reuse.south);
+\end{tikzpicture}

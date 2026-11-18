@@ -1,0 +1,42 @@
+% !TeX root = ../main.tex
+\ctitle{面向稀疏矩阵计算的近似计算与软硬件协同加速技术研究}
+\xuehao{D202381438}\schoolcode{10487}
+\csubjectname{计算机科学与技术}\cauthorname{翟嘉琪}
+\csupervisorname{石宣化}\csupervisortitle{教授}\miji{}
+% 原模板的具体答辩日期未经核实，初稿留待确定。
+\defencedate{待确定}\grantdate{}\chair{}
+\firstreviewer{}\secondreviewer{}\thirdreviewer{}
+\etitle{Approximate Computing and Hardware--Software Co-Design for Accelerating Sparse Matrix Computations}
+\edegree{Doctor of Philosophy in Engineering}
+\esubject{Computer Science and Technology}\eauthor{ZHAI Jiaqi}
+\esupervisor{Prof. SHI Xuanhua}\edate{2027}
+\dctab{\begin{tabular}{|P{1.3cm}|P{2cm}|P{2cm}|P{5.2cm}|}\hline
+角色&姓名&职称&单位\\\hline
+主席&&&\\\hline 委员&&&\\\hline 委员&&&\\\hline 委员&&&\\\hline 委员&&&\\\hline
+\end{tabular}}
+\cabstract{
+稀疏矩阵计算广泛存在于信息检索、推荐系统及科学工程计算中，是高性能计算系统的重要基础。以稀疏矩阵--向量乘法为核心的执行流程具有算术强度低、访存不规则及负载分布不均等特征，计算性能常受数据传输与执行组织限制。传统优化主要围绕既定计算精度与计算范围提高执行效率，较少利用不同计算阶段、数据区域与运行状态之间的计算需求差异。近似计算为减少冗余运算和数据访问提供了机会，但其收益同时受计算质量、额外决策开销与底层执行效率影响，因而需要联合设计近似计算机制与软硬件执行系统。
+
+本文围绕稀疏矩阵计算中的计算精度冗余、计算范围冗余和动态精度需求，研究三类近似计算与协同加速方法。首先，通过分析 Top-K 稀疏检索与共轭梯度迭代求解的计算特征，区分候选保持、召回率和数值收敛三种质量要求，建立以计算需求识别、近似计算决策和协同执行为核心的研究思路。在此基础上，开展以下研究。
+
+针对全量高精度 Top-K 稀疏计算的访存开销，提出低比特分层计算方法及加速系统 AccelES。采用 INT6 近似计算筛选候选，并结合 ReSparse 非零元素剪枝降低第一阶段的数据量，仅对候选执行 FP32 重算。设计 Ultra-CSR 与 Random-CSR，分别适配低精度流式扫描和高精度按行访问，并以 FPGA 异构计算核心实现两阶段协同执行。在原论文的五个真实语料派生数据集和六个人工数据集上，完整重算配置相对所选 FPGA、GPU、CPU 基线分别取得 3.4、2.5 和 153.3 倍加速，实验中的最大候选保持率损失为 0.95\%。
+
+针对低比特阶段仍需遍历全量候选的问题，提出结构感知选择性计算系统 ParetoES。采用 Spherical K-means++ Refine 构建方向敏感的候选簇，通过簇探测控制实际计算范围；在继承低比特量化与稀疏压缩的基础上，设计自适应簇探测引擎、分布式微型排序单元和分层热点负载均衡策略，将搜索空间缩减转化为并行执行收益。在五个数据集、Recall@100 为 0.8 至 1.0 的评估区间内，相对 AccelES 的平均吞吐提升为 2.27 倍，相对 CPU 和 GPU 基线的最高吞吐提升分别约为 540 倍和 79 倍。
+
+针对迭代状态变化导致的动态精度需求，提出状态感知混合精度求解系统 EvoCG。通过强化学习将搜索方向的局部数值特征映射为 FP64、FP32 和 BF16 精度决策，结合 Tile-CSC 数据布局和统一的线程束计算内核实现异构精度执行，并采用设备端策略推理、区间复用及 CUDA Graph 降低运行时开销。在 47 个对称正定矩阵上，采用矩阵专属离线训练策略时，相对 cuSPARSE、PETSc、Ginkgo、Mille-FP64 和 Mille-Mixed 的几何平均加速比分别为 2.52、3.06、2.48、1.93 和 6.99。其中，Mille 系列比较仅统计其实现成功求解的矩阵子集。相对相同执行基础上的全 FP64 配置，动态精度控制带来 1.28 倍几何平均加速，平均迭代次数增加 11.4\%，策略推理平均占在线求解时间的 1.09\%。
+
+上述研究表明，在相应质量约束下，识别并利用计算需求差异能够减少稀疏计算的实际执行成本。低比特分层计算与结构感知选择性计算形成从降低单位计算成本到缩减计算范围的技术递进，状态感知混合精度则将研究拓展到具有误差传播和状态反馈的迭代过程。三项研究共同说明，近似计算机制必须与稀疏数据表示、并行执行架构及运行时调度相适配，才能形成端到端性能收益。
+}
+\ckeywords{稀疏矩阵计算；近似计算；软硬件协同设计；混合精度}
+\eabstract{
+Sparse matrix computations are fundamental to information retrieval, recommendation, and scientific computing. Workflows centered on sparse matrix--vector multiplication (SpMV) often suffer from low arithmetic intensity, irregular memory accesses, and load imbalance. Conventional optimizations improve the execution of a prescribed workload, while differences in precision requirements across stages, data regions, and evolving solver states create opportunities to reduce the workload itself. Realizing these opportunities requires approximate computation to be co-designed with sparse representations, parallel architectures, and runtime mechanisms.
+
+This dissertation investigates three complementary problems: redundant high-precision computation, redundant candidate processing, and state-dependent precision requirements. First, AccelES introduces a two-stage Top-K SpMV workflow. INT6 computation and ReSparse pruning identify a compact candidate set, followed by FP32 recomputation. Ultra-CSR and Random-CSR support streaming screening and row-wise refinement, respectively, on a heterogeneous FPGA architecture. On the original evaluation workloads, the refinement configuration achieves reported speedups of 3.4, 2.5, and 153.3 over the selected FPGA, GPU, and CPU baselines, with a maximum observed candidate-retention loss of 0.95\%.
+
+Second, ParetoES reduces the candidate range that still must be scanned by AccelES. It combines Spherical K-means++ Refine with configurable cluster probing, adaptive FPGA probing engines, distributed micro-sorters, and hierarchical hotspot balancing. Over five datasets and Recall@100 targets between 0.8 and 1.0, it improves average throughput over AccelES by 2.27 times. Its highest throughput improvements over the evaluated CPU and GPU baselines are approximately 540 and 79 times, respectively.
+
+Third, EvoCG extends approximate computation to iterative sparse solvers whose numerical sensitivity changes with the Krylov state. A reinforcement-learning controller selects FP64, FP32, or BF16 for column-block-associated tiles. Tile-CSC and a unified warp-centric SpMV kernel support heterogeneous execution, while device-side policy inference, interval reuse, and CUDA Graph replay reduce runtime overhead. With matrix-specific offline training, experiments on 47 symmetric positive definite matrices show geometric-mean speedups of 2.52, 3.06, 2.48, 1.93, and 6.99 over cuSPARSE, PETSc, Ginkgo, Mille-FP64, and Mille-Mixed. Comparisons with the Mille implementations are restricted to the subsets on which those implementations complete successfully. Against the identical execution substrate using FP64 throughout, dynamic precision control provides a 1.28-times geometric-mean speedup, with 11.4\% more iterations on average and average online policy overhead of 1.09\%.
+
+These studies use distinct quality criteria: candidate preservation, retrieval recall, and numerical convergence. They do not assume a universal error model. Together, they demonstrate that exploiting differences in computational requirements can reduce sparse execution costs when approximation decisions are matched to the data representation and execution system. The progression from hierarchical precision to selective computation is complemented by an extension to feedback-driven precision control in iterative solvers.
+}
+\ekeywords{Sparse matrix computation; Approximate computing; Hardware--software co-design; Mixed precision}

@@ -1,0 +1,10 @@
+\begin{tikzpicture}[font=\small,box/.style={draw,rounded corners=2pt,align=center,inner sep=7pt},>=Stealth]
+\node[box,text width=13cm] (a) {共同问题：固定计算精度与范围难以适应计算需求差异\\研究对象：以 SpMV 为核心的 Top-K 检索与 CG 迭代流程};
+\node[box,text width=13cm,below=7mm of a] (b) {第2 章：从已有实验分析阶段精度、区域贡献与状态敏感性\\区分候选保持、检索召回与数值收敛三种质量约束};
+\node[box,text width=3.65cm,below=9mm of b,xshift=-4.65cm] (c) {第3 章：计算精度冗余\\低比特筛选与 FP32 重算\\Ultra-CSR / Random-CSR\\FPGA 异构核心\\AccelES};
+\node[box,text width=3.65cm,right=4mm of c] (d) {第4 章：计算范围冗余\\方向敏感聚类与簇探测\\ACPE / 分布式排序\\多核热点负载均衡\\ParetoES};
+\node[box,text width=3.65cm,right=4mm of d] (e) {第5 章：动态精度需求\\状态反馈与精度决策\\Tile-CSC / 统一内核\\低开销 GPU 运行时\\EvoCG};
+\node[box,text width=13cm,below=11mm of d] (f) {第6 章：质量约束、决策开销与执行效率共同决定端到端收益\\归纳协同设计原则、适用条件与研究局限};
+\draw[->] (a)--(b);\draw[->] (b.south)-|(c.north);\draw[->] (b)--(d);\draw[->] (b.south)-|(e.north);
+\draw[->] (c.south)|-(f.north);\draw[->] (d)--(f);\draw[->] (e.south)|-(f.north);
+\end{tikzpicture}

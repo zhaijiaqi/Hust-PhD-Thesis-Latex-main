@@ -1,0 +1,15 @@
+% 根据原架构重排模块，字体保持 9 pt，不随插图宽度缩放。
+\begin{tikzpicture}[font=\fontsize{10}{12}\selectfont,>=Stealth,
+b/.style={draw,rounded corners=2pt,align=center,minimum height=12mm,text width=34mm,fill=blue!5},
+wide/.style={b,text width=124mm,minimum height=10mm}]
+\node[wide] (h) {HBM：32 个通道\quad INT6 压缩矩阵与原始 FP32 矩阵};
+\node[b,below=8mm of h,xshift=-44mm] (q0) {Q-core 0\\Ultra-CSR 解码\\INT6 乘加与行归约\\局部 Top-16};
+\node[b,right=8mm of q0] (qi) {...\\32 路并行粗筛\\每周期每核处理\\30 个非零元素};
+\node[b,right=8mm of qi] (qn) {Q-core 31\\Ultra-CSR 解码\\INT6 乘加与行归约\\局部 Top-16};
+\node[wide,below=8mm of qi] (c) {局部候选汇集：至多 32 × 16 = 512 个候选行号};
+\node[wide,below=7mm of c] (r) {32 路 Reader\quad Random-CSR 行定位、数据读取与包重组};
+\node[wide,below=7mm of r] (f) {轮询仲裁 → 共享 F-core\quad FP32 乘加与按行归约\\每周期处理 10 个非零元素，校正已保留候选的得分};
+\draw[->] (h.south)-|(q0.north);\draw[->] (h)--(qi);\draw[->] (h.south)-|(qn.north);
+\draw[->] (q0.south)|-(c.west);\draw[->] (qi)--(c);\draw[->] (qn.south)|-(c.east);
+\draw[->] (c)--(r);\draw[->] (r)--(f);
+\end{tikzpicture}

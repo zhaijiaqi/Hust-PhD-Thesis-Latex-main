@@ -1,0 +1,41 @@
+% !TeX root = ../../main.tex
+\subsection{表示学习与检索计算需求的演变}
+词向量研究通过向量空间关系表达词语的语言规律\cite{mikolov2013linguistic}，相关综述进一步讨论超越静态词嵌入的表示方法\cite{incitti2023beyond}。Transformer、自监督语言建模和 BERT 等工作改变了向量产生方式\cite{vaswani2017attention,radford2018improving,devlin2018bert}，LMMS 则体现上下文语义表示在词义任务中的应用\cite{loureiro2022lmms}。这些研究影响检索输入的维度和分布，但表示模型与底层稀疏检索分别影响语义质量和执行成本，两者的收益需要在相应系统边界内评价。
+
+从系统视角看，表示学习与相似度计算之间存在接口。编码器决定向量的维度、范数和稀疏支撑，检索系统则决定候选如何存储与扫描。对本文而言，需固定编码器与稀疏化方法，再比较后端执行；若同时改变表示模型，召回变化将混合语义表示误差和算子近似误差。因此，前两项工作的实验以既定稀疏矩阵为输入，不将硬件加速等同于完整表示学习流程的加速。
+
+传统词项检索以 Okapi 等模型为代表\cite{1995BM25}，神经稀疏检索则探索从重排序到可索引表示的转换\cite{zamani2018neural,bai2020sparterm}。SPLADE 系列进一步研究稀疏词项扩展与效率权衡\cite{formal2021splade_v2,formal2024towards}。这些任务与本文的共同点是候选计算具有稀疏结构，但特征维度、查询稀疏性和得分分布未必相同。特别是词表维度远大于1024 的设置，不能直接套用本研究的10 位列索引和全量片上查询复制。
+
+稠密段落检索、混合表示检索和多阶段重排序形成另一条研究路线\cite{karpukhin2020dense,chuang2024information,xu2023hybrid,sasazawa2023text}。这些系统通常将快速召回与精细比较分开，说明阶段间质量要求可以不同。本文借鉴的是这种阶段分工思想，具体实现仍以稀疏 SpMV 和候选集合为对象。应区分向量层面的 Recall@K 与重排序后的最终任务指标，避免用一个指标替代完整任务质量。
+
+\subsection{推荐与检索增强应用中的候选计算}
+协同过滤和基于物品的推荐方法为大规模相似度计算提供了早期应用背景\cite{goldberg1992using,sarwar2001item}。深度推荐、图推荐及强化学习推荐综述表明，实际系统往往同时涉及表示生成、候选召回和排序决策\cite{chen2020survey,zhang2021artificial,wang2021graph,afsar2022reinforcement}。因此，本文选择 Top-K 稀疏计算作为明确的系统边界，先验证这一核心流程的成本与质量，再讨论它与上层系统的可能联系。
+
+推荐任务还存在多样性、知识增强和解释性等目标。DGRec 关注多样化嵌入，GHRS 研究图混合推荐，知识增强 Top-K 研究引入特定表示空间\cite{yang2023dgrec,darban2022ghrs,ma2021knowledge}；利用评论和细粒度方面的推荐工作则强调结果解释\cite{Amazon_Product_Reviews_2019}。这些目标表明，基于既定内积的 Top-K 计算只覆盖候选选择环节，推荐公平性、多样性和用户满意度仍取决于上层模型与排序策略。
+
+工业研究讨论嵌入式搜索、兴趣建模和 CPU 推荐计算优化\cite{huang2020embedding,shen2022deep,jain2023optimizing}。矩阵分解与神经协同过滤的比较也强调一致基线的重要性\cite{rendle2020neural}。本文据此保持比较双方的数据、目标召回和计时范围一致；对于跨平台实现差异，则以消融而非单一加速比解释。生成式检索与推荐综述提供更广的系统视角\cite{rajput2023recommender,huang2024comprehensive}，但其执行流程与显式向量 Top-K 存在差异，属于后续适配方向。
+
+检索增强生成将外部候选引入生成模型\cite{lewis2020retrieval,izacard2020leveraging}，混合检索和多分区检索进一步改变召回组织\cite{sawarkar2024blended,wang2024m}。在多模态场景中，晚交互、文档截图嵌入与视觉语言检索研究形成不同的相似度结构\cite{lin2023fine,ma2024unifying,zhan2025elip}。本文不把这些任务全部归约为完全相同的稀疏 SpMV，而是指出只有在上层计算能够明确映射为本文接口时，底层结果才可用于分析应用加速。
+
+\subsection{稀疏格式、重排与执行映射的研究维度}
+稀疏格式研究的核心是决定哪些结构信息显式存储，以及如何将其转化为并行任务。CSR2 以 SIMD 加速为背景\cite{bian2020csr2}，ARM 众核上的稀疏计算研究说明布局和执行映射具有平台相关性\cite{ZHENG2023103035}。GPU 算法设计和异构处理器评估则从不同实现角度分析稀疏及图计算内核\cite{chu2023efficient,zhang2019performance}。这些工作共同提示，仅以存储字节数评判格式是不充分的，解码、归约和线程利用率同样重要。
+
+FPGA 相关研究覆盖能效稀疏 BLAS、数据复用压缩、重排和 Roofline 指导优化\cite{dorrance2014scalable,li2023efficient,li2021optimized,favaro2023optimizing}。HLS 研究关注高层综合表达与 HBM 平台之间的实现路径\cite{du2022high}，Vitis 稀疏库提供工程实现参考\cite{vitis_library}。本文将这些路线与应用语义驱动优化区分：前者改进给定工作量的执行，后者进一步改变哪些高精度数据需要读取，两者可以叠加而非相互排斥。
+
+稀疏矩阵乘法与图神经网络加速还涉及不同的数据复用结构。ACES、HotTiles、SGCN 及 SIGMA 分别围绕执行流、异构资源、压缩特征或灵活互连展开研究\cite{ACES,gerogiannis2024hottiles,yoo2023sgcn,qin2020sigma}。这些工作提供相关体系结构思想，但 SpMM、图卷积与 SpMV 的算术强度和复用机会不同，本文不直接借用其峰值加速比评价本系统。FSPA 则提供另一种器件与计算组织背景\cite{zhang2023fspa}，进一步说明算法相同并不意味着实现约束相同。
+
+编译器可通过稀疏中间表示组织算子与调度\cite{yang2023spmmplu}，近存多路归并可用于稀疏转置和数据流变换\cite{feng2022menda}。本文的格式转换目前主要在离线完成，后续可将固定格式和阶段切换关系显式表达为编译约束，使候选筛选、重算和混合精度的资源选择更易自动化。但这种自动化需要同时建模质量条件，不能只优化稀疏循环的执行顺序。
+
+\subsection{低精度硬件与应用近似的区别}
+低精度研究不仅涉及数值截断，还包括权重表示、缩放、异常值处理和硬件指令映射。OPTQ、INT8 语言模型计算和8 位 Transformer 研究提供了相关实例\cite{frantar2023optq,dettmers2022gpt3,yu20248}。模型蒸馏与高效神经网络处理则从更广的计算简化角度展开\cite{sanh2019distilbert,sze2020efficient}。这些工作作为邻近研究用于说明降低成本的不同层次，不直接作为本文 CG 误差可接受性的证据。
+
+推荐推理的低精度硬件研究说明，数值格式选择应与目标应用和执行平台协调\cite{deng2021low}。打包 SIMD 指令相关工作提供位级并行组织的背景\cite{miyaoka2002algorithm}，长度自适应 Transformer 协同设计则体现输入相关执行预算的思想\cite{peng2022length}。本文采用 INT6 的关键条件是固定总线和可定制电路，并不是认为6 位在所有硬件或任务上天然优于8 位。
+
+Top-K 稀疏特征问题中的多 GPU 混合精度研究\cite{sgherzi2022mixed}，与本文的检索 Top-K 和 CG 具有部分计算机制上的联系，但输出语义和误差传播方式不同。相关方法的适用性取决于数值对象及其输出语义。本文在比较近似方案时始终先说明数值对象、质量约束与执行范围，再讨论位宽、并行度及性能。
+
+\subsection{软件基础、系统边界与可复现评估}
+MKL、cuSPARSE、Cusp 及 Thrust 等软件提供不同层次的稀疏算子、并行算法和结果选择接口\cite{wang2014intel,cusp,thrust_docs}。Faiss 及 GPU 大规模相似度搜索研究提供向量索引与搜索实现\cite{faiss,johnson2019billion}，\texttt{sparse\_dot\_topn}提供稀疏乘法与 Top-N 候选计算接口\cite{sparsedottopn}。这些工具的支持数据类型、输出语义和可配置参数不完全相同，应在实验中记录实际使用路径，而不是仅列出库名。
+
+向量数据库研究进一步涉及索引维护和系统管理\cite{2021milvus}。大数据学习及 MapReduce 相关工作说明离线准备、任务划分和重复执行构成独立成本\cite{zhou2017machine,dean2008mapreduce}。因此，本文区分一次性格式转换、在线查询和最终结果验证。对不能在相同实现路径上执行的比较，采用清楚的系统边界说明，并单独交代离线准备和结果验证的成本。
+
+图嵌入研究中的稀疏投影和高阶结构表达\cite{chen2019fast,morris2020weisfeiler}也体现了“稀疏”在不同层次的含义。输入表示稀疏、矩阵结构稀疏和执行时动态跳过工作是不同概念。本文将三者分别落实到数据格式、候选决策和运行时机制，以减少术语混用，并使相关研究与具体技术贡献形成可检验的对应关系。
